@@ -4,6 +4,4 @@
 cmake_minimum_required (VERSION 3.8)
 
 # Add source to this project's executable.
-add_executable (TestChain "TestChain.cpp" "TestChain.h")
-
-# TODO: Add tests and install targets if needed.
+add_executable (TestChain "main.cpp" "Block.cpp" "Block.h" "Blockchain.cpp" "Blockchain.h" "sha256.cpp" "sha256.h")
