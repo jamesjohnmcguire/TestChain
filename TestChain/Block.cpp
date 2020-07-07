@@ -1,47 +1,50 @@
-//
-// Created by Dave Nash on 20/10/2017.
-//
-
 #include <time.h>
 #include <vector>
 #include "Block.h"
 #include "sha256.h"
 
-Block::Block(uint32_t nIndexIn, const string &sDataIn) : _nIndex(nIndexIn), _sData(sDataIn)
+Block::Block(uint32_t indexIn, const string& dataIn)
+	: index(indexIn), data(dataIn)
 {
-    _nNonce = 0;
-    _tTime = time(nullptr);
-
-    sHash = _CalculateHash();
+	nonce = -1;
+	workingTime = time(nullptr);
 }
 
-void Block::MineBlock(uint32_t nDifficulty)
+string Block::GetHash()
 {
-    size_t size = (size_t)nDifficulty + 1;
-    vector<char> cstr(size);
-
-    for (uint32_t i = 0; i < nDifficulty; ++i)
-    {
-        cstr[i] = '0';
-    }
-    cstr[nDifficulty] = '\0';
-
-    string str(cstr.begin(), cstr.end());
-
-    do
-    {
-        _nNonce++;
-        sHash = _CalculateHash();
-    }
-    while (sHash.substr(0, nDifficulty) != str);
-
-    cout << "Block mined: " << sHash << endl;
+	return hash;
 }
 
-inline string Block::_CalculateHash() const
+void Block::MineBlock(uint32_t difficulty)
 {
-    stringstream ss;
-    ss << _nIndex << sPrevHash << _tTime << _sData << _nNonce;
+	size_t size = (size_t)difficulty + 1;
+	vector<char> tempBuffer(size);
 
-    return sha256(ss.str());
+	for (uint32_t i = 0; i < difficulty; ++i)
+	{
+		tempBuffer[i] = '0';
+	}
+	tempBuffer[difficulty] = '\0';
+
+	string testBuffer(tempBuffer.begin(), tempBuffer.end());
+	string testHash;
+
+	do
+	{
+		nonce++;
+		hash = CalculateHash();
+		testHash = hash.substr(0, difficulty);
+	} while (testHash != testBuffer);
+
+	cout << "Block mined: " << hash << endl;
+}
+
+inline string Block::CalculateHash() const
+{
+	stringstream streamBuffer;
+	streamBuffer << index << workingTime << data << nonce << PrevHash;
+
+	string buffer = streamBuffer.str();
+	string hash = sha256(buffer);
+	return hash;
 }

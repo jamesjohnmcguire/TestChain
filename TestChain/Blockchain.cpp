@@ -1,23 +1,24 @@
-//
-// Created by Dave Nash on 20/10/2017.
-//
-
 #include "Blockchain.h"
 
 Blockchain::Blockchain()
 {
-    _vChain.emplace_back(Block(0, "Genesis Block"));
-    _nDifficulty = 6;
+	Block genesis = Block(0, "Genesis Block");
+
+	chain.emplace_back(genesis);
+	difficulty = 6;
 }
 
-void Blockchain::AddBlock(Block bNew)
+void Blockchain::AddBlock(Block newBlock)
 {
-    bNew.sPrevHash = _GetLastBlock().sHash;
-    bNew.MineBlock(_nDifficulty);
-    _vChain.push_back(bNew);
+	Block previous = GetLastBlock();
+	string prevoiusHash = previous.Hash;
+	newBlock.PrevHash = prevoiusHash;
+
+	newBlock.MineBlock(difficulty);
+	chain.push_back(newBlock);
 }
 
-Block Blockchain::_GetLastBlock() const
+Block Blockchain::GetLastBlock() const
 {
-    return _vChain.back();
+	return chain.back();
 }
