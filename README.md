@@ -1,2 +1,2 @@
 # TestChain
-Here are the files for the TestChain C++ tutorial I have placed on my website http://davenash.com/2017/10/build-a-blockchain-with-c/
+This is a forked and modified version of the original TestChain C++ tutorial by Dave Nash.  The main modifications are include a readily able build system for use with Visual Studio or CMake, as well as, support for cross platform development.
